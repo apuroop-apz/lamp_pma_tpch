@@ -32,18 +32,15 @@ echo "ServerName localhost" >> /etc/apache2/apache2.conf
 sed -i "77s@.*@\/\/$cfg['Servers\'][\$i]['controluser'] = \$dbuser;@" /etc/phpmyadmin/config.inc.php
 sed -i "78s@.*@\/\/$cfg['Servers\'][\$i]['controlpass'] = \$dbpass;@" /etc/phpmyadmin/config.inc.php
 
-mysql_config_editor set --login-path=local --host=localhost --user=root --password
-
 make -C /etc/tpch/dbgen/
 cd /etc/tpch/dbgen/ && ./dbgen -s 0.1
 
 service mysql start
-mysql --login-path=local  -e "create database tpch"
-mysql --login-path=local tpch < /mysql/tpch_test.sql
+mysql -u root -p12345 -e "create database tpch"
+mysql -u root -p12345 tpch < /mysql/tpch_test.sql
 
-mysql --login-path=local < /usr/share/doc/phpmyadmin/examples/create_tables.sql
-mysql --login-path=local -e 'GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY "pmapassword"'
-
+mysql -u root -p12345 < /usr/share/doc/phpmyadmin/examples/create_tables.sql
+mysql -u root -p12345 -e 'GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY "pmapassword"'
 service mysql stop
 
 cd /
