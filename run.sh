@@ -26,11 +26,12 @@ fi
 sed -i "s/short_open_tag\ \=\ Off/short_open_tag\ \=\ On/g" /etc/php/7.0/apache2/php.ini
 sed -i "s/\;date\.timezone\ \=/date\.timezone\ \=\ ${DATE_TIMEZONE}/" /etc/php/7.0/apache2/php.ini
 
-echo "Include /etc/phpmyadmin/apache.conf" >> /etc/apache2/apache2.conf
 echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 sed -i "77s@.*@\/\/$cfg['Servers\'][\$i]['controluser'] = \$dbuser;@" /etc/phpmyadmin/config.inc.php
 sed -i "78s@.*@\/\/$cfg['Servers\'][\$i]['controlpass'] = \$dbpass;@" /etc/phpmyadmin/config.inc.php
+
+usermod -d /var/lib/mysql/ mysql
 
 make -C /etc/tpch/dbgen/
 cd /etc/tpch/dbgen/ && ./dbgen -s 0.1
