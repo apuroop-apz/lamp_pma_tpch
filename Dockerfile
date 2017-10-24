@@ -5,7 +5,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LOG_STDOUT **Boolean**
 ENV LOG_STDERR **Boolean**
 
-ADD tpch_test.sql /docker-entrypoint-initdb.d/tpch_test.sql
 COPY tpch_test.sql /mysql/tpch_test.sql
 COPY run.sh /mysql/run.sh
 
