@@ -33,16 +33,16 @@ sed -i "78s@.*@\/\/$cfg['Servers\'][\$i]['controlpass'] = \$dbpass;@" /etc/phpmy
 
 usermod -d /var/lib/mysql/ mysql
 
-make -C /etc/tpch/dbgen/
-cd /etc/tpch/dbgen/ && ./dbgen -s 0.1
+#make -C /etc/tpch/dbgen/
+#cd /etc/tpch/dbgen/ && ./dbgen -s 0.1
 
-service mysql start
-mysql -u root -p12345 -e "create database tpch"
-mysql -u root -p12345 tpch < /mysql/tpch_test.sql
+#service mysql start
+#mysql -u root -p12345 -e "create database tpch"
+#mysql -u root -p12345 tpch < /mysql/tpch_test.sql
 
-mysql -u root -p12345 < /usr/share/doc/phpmyadmin/examples/create_tables.sql
-mysql -u root -p12345 -e 'GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY "pmapassword"'
-service mysql stop
+#mysql -u root -p12345 < /usr/share/doc/phpmyadmin/examples/create_tables.sql
+#mysql -u root -p12345 -e 'GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY "pmapassword"'
+#service mysql stop
 
 cd /
 #Starting Apache & mysql:
