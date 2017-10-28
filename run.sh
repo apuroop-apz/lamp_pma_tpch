@@ -35,13 +35,11 @@ usermod -d /var/lib/mysql/ mysql
 
 make -C /etc/tpch/dbgen/
 cd /etc/tpch/dbgen/ && ./dbgen -v -s 0.1
-#cd /etc/tpch/dbgen/ && ./dbgen -vf -T L -s 0.1 && ./dbgen -vf -T c -s 0.1 && ./dbgen -vf -T n -s 0.1 && ./dbgen -vf -T O -s 0.1 && ./dbgen -vf -T P -s 0.1 && ./dbgen -vf -T r -s 0.1 && ./dbgen -vf -T s -s 0.1 && ./dbgen -vf -T S -s 0.1
 
 service mysql start
 mysql -u root -p12345 -e "create database tpch"
 mysql -u root -p12345 tpch < /mysql/tpch_test.sql
-mysql -u root -p12345 tpch < /mysql/tpch_test2.sql
-mysql -u root -p12345 tpch < /mysql/tpch_test3.sql
+mysql -u root -p12345 -e "optimize table tpch.LINEITEM"
 
 mysql -u root -p12345 < /usr/share/doc/phpmyadmin/examples/create_tables.sql
 mysql -u root -p12345 -e 'GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY "pmapassword"'
