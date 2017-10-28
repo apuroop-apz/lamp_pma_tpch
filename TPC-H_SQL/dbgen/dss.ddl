@@ -1,4 +1,8 @@
 -- Sccsid:     @(#)dss.ddl	2.1.8.1
+DROP DATABASE IF EXISTS tpch;
+CREATE DATABASE tpch;
+USE tpch;
+
 CREATE TABLE NATION  ( N_NATIONKEY  INTEGER NOT NULL,
                             N_NAME       CHAR(25) NOT NULL,
                             N_REGIONKEY  INTEGER NOT NULL,
