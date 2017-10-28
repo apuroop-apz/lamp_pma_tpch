@@ -1,8 +1,4 @@
 -- Sccsid:     @(#)dss.ddl	2.1.8.1
-DROP DATABASE IF EXISTS tpch;
-CREATE DATABASE tpch;
-USE tpch;
-
 CREATE TABLE NATION  ( N_NATIONKEY  INTEGER NOT NULL,
                             N_NAME       CHAR(25) NOT NULL,
                             N_REGIONKEY  INTEGER NOT NULL,
@@ -71,4 +67,3 @@ CREATE TABLE LINEITEM ( L_ORDERKEY    INTEGER NOT NULL,
                              L_SHIPINSTRUCT CHAR(25) NOT NULL,
                              L_SHIPMODE     CHAR(10) NOT NULL,
                              L_COMMENT      VARCHAR(44) NOT NULL);
-
