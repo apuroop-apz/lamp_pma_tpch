@@ -2,33 +2,26 @@ FROM ubuntu:16.04
 MAINTAINER Apuroop Naidu <apuroop.naidu>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV LOG_STDOUT **Boolean**
-ENV LOG_STDERR **Boolean**
-
-COPY tpch_test.sql /mysql/tpch_test.sql
-COPY run.sh /mysql/run.sh
 
 #Updating and Installing resources
-RUN apt-get -y update
-RUN apt-get install -y \
-        apt-utils \
-        nano \
+RUN apt-get -y update && apt-get install -y apt-utils \
+	nano \
         curl \
         ftp \
         vim \
         sed \
         zip \
-        unzip
+        unzip \
+	netcat-openbsd
 
 #Installing Apache2
 RUN apt-get -y install apache2
-RUN update-rc.d apache2 enable
 
-#Installing MySQL and setting the password as 12345
-RUN echo 'mysql-server mysql-server/root_password password 12345' | debconf-set-selections
-RUN echo 'mysql-server mysql-server/root_password_again password 12345' | debconf-set-selections
-RUN apt-get -y install mysql-server --no-install-recommends
-RUN sed -ie "s/^bind-address\s*=\s*127\.0\.0\.1$/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+#Installing MySQL
+RUN DEBIAN_FRONTEND=noninteractive \
+	apt-get -y install --force-yes \
+	mysql-server-5.7 && \
+	service mysql stop
 
 #Installing PHP7.0 and dependencies
 RUN apt-get install -y \
@@ -66,29 +59,32 @@ RUN apt-get install -y \
         libapache2-mod-php7.0
 
 #Installing phpmyadmin and setting the password as 12345
-RUN echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections
-RUN echo 'phpmyadmin phpmyadmin/app-password-confirm password 12345' | debconf-set-selections
-RUN echo 'phpmyadmin phpmyadmin/mysql/admin-pass password 12345' | debconf-set-selections
-RUN echo 'phpmyadmin phpmyadmin/mysql/app-pass password 12345' | debconf-set-selections
-RUN echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections
-RUN apt-get -y install phpmyadmin --no-install-recommends
+RUN echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections && \
+	echo 'phpmyadmin phpmyadmin/app-password-confirm password 12345' | debconf-set-selections && \
+	echo 'phpmyadmin phpmyadmin/mysql/admin-pass password 12345' | debconf-set-selections && \
+	echo 'phpmyadmin phpmyadmin/mysql/app-pass password 12345' | debconf-set-selections && \
+	echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections && \
+	apt-get -y install phpmyadmin --no-install-recommends
 
-RUN mkdir -m777 /etc/tpch/
 COPY index.php /var/www/html/
-COPY run.sh /usr/sbin/
+COPY tpch_test.sql /mysql/tpch_test.sql
+ADD scripts /scripts
+ADD scripts/run.sh /usr/local/bin/run.sh
+
+RUN a2enmod rewrite && phpenmod mcrypt && phpenmod mbstring && \
+	mkdir -m777 /etc/tpch/ && \
+	ln -s /usr/share/phpmyadmin /var/www/phpmyadmin && \
+	chmod +x /usr/local/bin/run.sh && \
+	chown -R www-data:www-data /var/www/html && \
+	chmod +x /scripts/*.sh && \
+	apt-get clean
+
 ADD TPC-H_SQL /etc/tpch/
+ADD my.cnf /etc/mysql/conf.d/my.cnf
 
-RUN a2enmod rewrite && a2enconf phpmyadmin && phpenmod mcrypt && phpenmod mbstring
-RUN ln -s /usr/share/phpmyadmin /var/www/phpmyadmin
-RUN chmod +x /usr/sbin/run.sh
-RUN chown -R www-data:www-data /var/www/html
-RUN chown -R mysql: /var/lib/mysql
-
-RUN apt-get clean
-VOLUME ["/var/log/mysql/", "/var/lib/mysql", "/var/log/apache2/", "/var/www/html"]
+VOLUME ["/var/lib/mysql", "/etc/mysql"]
 
 EXPOSE 80
 EXPOSE 3306
 
-ENTRYPOINT /usr/sbin/run.sh
-
+ENTRYPOINT ["/usr/local/bin/run.sh"]
