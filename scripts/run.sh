@@ -80,10 +80,6 @@ fi
 	        source /scripts/load.sh
 	        stop_spinner $?
 
-mysqladmin -uroot shutdown
-while  nc -vz localhost 3306; do sleep 1; done
-
-service mysql start
 if [ ! -z $ROOTPASS ]; then
 	echo "Creating password for root: ..."
 	        source /scripts/load.sh
