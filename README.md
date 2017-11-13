@@ -28,5 +28,5 @@ Get into the shell with -i (interactively)
 `MYSQL_DBNAME` <br>
 
 ## Extra info
-* The processes in the background will take at least 1:30+ mins once the you run the image.
+* The processes in the background will take at least 1:30+ mins once you run the image.
 * `$ docker logs container_ID` will give the logs of the container at the time of execution.
