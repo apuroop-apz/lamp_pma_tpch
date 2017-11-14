@@ -23,6 +23,7 @@ Set up a username & password for Mysql and also create a Mysql database.
 `$ docker run -d -t -p 80:80 --name anyname -e MYSQL_USERNAME=anyusername -e MYSQL_PASSWORD=anypass -e MYSQL_DBNAME=anydbname apuroopapz/lamp_pma_tpch`
 
 Get into the shell with -i (interactively)
+
 `$ docker run -i -t -p 80:80 --name anyname apuroopapz/lamp_pma_tpch`
 
 ## Environment Variables
