@@ -22,11 +22,6 @@ sed -i "78s@.*@\/\/$cfg['Servers\'][\$i]['controlpass'] = \$dbpass;@" /etc/phpmy
 make -C /etc/tpch/dbgen/
 cd /etc/tpch/dbgen/ && ./dbgen -v -s 0.1
 
-#mkdir -p /var/run/mysqld
-#touch /var/run/mysqld/mysqld.sock
-#chown mysql:mysql /var/run/mysqld
-#usermod -d /var/lib/mysql/ mysql
-
 /usr/bin/mysqld_safe &
 while ! nc -vz localhost 3306; do sleep 1; done
 
