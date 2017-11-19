@@ -7,12 +7,9 @@ PASS=${MYSQL_PASSWORD:-}
 DB=${MYSQL_DBNAME:-}
 ROOTPASS=${MYSQL_ROOT_PASSWORD:-}
 
-if [ $ALLOW_OVERRIDE=='All' ]; then
-	/bin/sed -i 's/AllowOverride\ None/AllowOverride\ All/g' /etc/apache2/apache2.conf
-fi
+sed -i 's/AllowOverride\ None/AllowOverride\ All/g' /etc/apache2/apache2.conf
 
 sed -i "s/short_open_tag\ \=\ Off/short_open_tag\ \=\ On/g" /etc/php/7.0/apache2/php.ini
-sed -i "s/\;date\.timezone\ \=/date\.timezone\ \=\ ${DATE_TIMEZONE}/" /etc/php/7.0/apache2/php.ini
 
 echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
@@ -45,7 +42,7 @@ if [ ! -z $DB ]; then
                 start_spinner
                 sleep 2
 
-		/usr/bin/mysql -uroot -e 'CREATE DATABASE $DB'
+		/usr/bin/mysql -uroot -e 'CREATE DATABASE '$DB''
 		
 		source /essentials/load.sh
                 stop_spinner $?
@@ -113,6 +110,5 @@ fi
 
 cd /
 
-#Starting Apache & mysql:
 service apache2 start && service mysql start && bash
 
