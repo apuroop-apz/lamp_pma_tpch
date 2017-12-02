@@ -27,10 +27,13 @@ Get into the shell with -i (interactively)
 `$ docker run -i -t -p 80:80 --name anyname apuroopapz/lamp_pma_tpch`
 
 ## Environment Variables
-`MYSQL_USERNAME` <br>
-`MYSQL_PASSWORD` <br>
-`MYSQL_ROOT_PASSWORD` <br>
-`MYSQL_DBNAME` <br>
+`MYSQL_USERNAME`
+
+`MYSQL_PASSWORD`
+
+`MYSQL_ROOT_PASSWORD`
+
+`MYSQL_DBNAME`
 
 ## Extra info
 * The processes in the background will take at least 1:30+ mins once you run the image.
